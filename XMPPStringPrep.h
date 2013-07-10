@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface ICU4XMPPFramework : NSObject
+@interface XMPPStringPrep : NSObject
 
 +(NSString *)prepNode:(NSString *)node;
 +(NSString *)prepDomain:(NSString *)domain;

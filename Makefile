@@ -16,13 +16,13 @@ OUTPUT = lib/libicudataxmppframework.a lib/libicui18nxmppframework.a lib/libicui
 CROSS_BUILD_DIR = macosx-x86_64
 ICU_TARGET = icu/source/runConfigureICU
 ARCH_DIRS = macosx-x86_64 iphonesimulator-i386 iphoneos-armv7s iphoneos-armv7
-ARCH_TARGET = $(patsubst %, %/ICU4XMPPFramework.a, $(ARCH_DIRS))
-UNIVERSAL_TARGET = ICU4XMPPFramework.a
+ARCH_TARGET = $(patsubst %, %/XMPPStringPrep.a, $(ARCH_DIRS))
+UNIVERSAL_TARGET = XMPPStringPrep.a
 
 all: $(UNIVERSAL_TARGET)
 
-ICU4XMPPFramework.a: $(ARCH_TARGET)
-  lipo -create -output $@ $^
+XMPPStringPrep.a: $(ARCH_TARGET)
+	lipo -create -output $@ $^
 	ranlib $@
 
 icu/source/runConfigureICU: $(SRC_ARCHIVE) $(DATA_ARCHIVE)
@@ -31,50 +31,50 @@ icu/source/runConfigureICU: $(SRC_ARCHIVE) $(DATA_ARCHIVE)
 	unzip -qod icu/source/data/in $(DATA_ARCHIVE)
 	touch $@
 
-macosx-%/ICU4XMPPFramework.a: ARCH = $(patsubst macosx-%/ICU4XMPPFramework.a, %, $@)
-macosx-%/ICU4XMPPFramework.a: ARCHFLAGS = -arch $(ARCH)
-macosx-%/ICU4XMPPFramework.a: SDK_NAME = macosx$(MACOSX_SDK_VERSION)
-macosx-%/ICU4XMPPFramework.a: SDK_ROOT = $(DEVELOPER)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOSX_SDK_VERSION).sdk
-macosx-%/ICU4XMPPFramework.a: CFLAGS = $(BASE_CFLAGS) $(ARCHFLAGS) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-macosx-%/ICU4XMPPFramework.a: CXXFLAGS = $(BASE_CXXFLAGS) $(ARCHFLAGS) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-macosx-%/ICU4XMPPFramework.a: LDFLAGS = $(ARCHFLAGS) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-macosx-%/ICU4XMPPFramework.a: $(ICU_TARGET) ICU4XMPPFramework.m
+macosx-%/XMPPStringPrep.a: ARCH = $(patsubst macosx-%/XMPPStringPrep.a, %, $@)
+macosx-%/XMPPStringPrep.a: ARCHFLAGS = -arch $(ARCH)
+macosx-%/XMPPStringPrep.a: SDK_NAME = macosx$(MACOSX_SDK_VERSION)
+macosx-%/XMPPStringPrep.a: SDK_ROOT = $(DEVELOPER)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$(MACOSX_SDK_VERSION).sdk
+macosx-%/XMPPStringPrep.a: CFLAGS = $(BASE_CFLAGS) $(ARCHFLAGS) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+macosx-%/XMPPStringPrep.a: CXXFLAGS = $(BASE_CXXFLAGS) $(ARCHFLAGS) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+macosx-%/XMPPStringPrep.a: LDFLAGS = $(ARCHFLAGS) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+macosx-%/XMPPStringPrep.a: $(ICU_TARGET) XMPPStringPrep.m
 	rm -fr $(@D)
 	mkdir $(@D)
 	cd $(@D) && CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" xcrun -sdk $(SDK_NAME) sh $(PWD)/icu/source/runConfigureICU $(ICU_FLAGS)
 	cd $(@D) && gnumake
-	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o ICU4XMPPFramework.so ../ICU4XMPPFramework.m
-	cd $(@D) && libtool -static -o ICU4XMPPFramework.a ICU4XMPPFramework.so lib/*.a
+	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o XMPPStringPrep.so ../XMPPStringPrep.m
+	cd $(@D) && libtool -static -o XMPPStringPrep.a XMPPStringPrep.so lib/*.a
 
-iphonesimulator-%/ICU4XMPPFramework.a: ARCH = $(patsubst iphonesimulator-%/ICU4XMPPFramework.a, %, $@)
-iphonesimulator-%/ICU4XMPPFramework.a: ARCHFLAGS = -arch $(ARCH)
-iphonesimulator-%/ICU4XMPPFramework.a: SDK_NAME = iphonesimulator$(IOS_SDK_VERSION)
-iphonesimulator-%/ICU4XMPPFramework.a: SDK_ROOT = $(DEVELOPER)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IOS_SDK_VERSION).sdk
-iphonesimulator-%/ICU4XMPPFramework.a: CFLAGS = $(BASE_CFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
-iphonesimulator-%/ICU4XMPPFramework.a: CXXFLAGS = $(BASE_CXXFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
-iphonesimulator-%/ICU4XMPPFramework.a: LDFLAGS = $(ARCHFLAGS) -miphoneos-version-min=$(IOS_MIN_VERSION)
-iphonesimulator-%/ICU4XMPPFramework.a: $(ICU_TARGET) ICU4XMPPFramework.m
+iphonesimulator-%/XMPPStringPrep.a: ARCH = $(patsubst iphonesimulator-%/XMPPStringPrep.a, %, $@)
+iphonesimulator-%/XMPPStringPrep.a: ARCHFLAGS = -arch $(ARCH)
+iphonesimulator-%/XMPPStringPrep.a: SDK_NAME = iphonesimulator$(IOS_SDK_VERSION)
+iphonesimulator-%/XMPPStringPrep.a: SDK_ROOT = $(DEVELOPER)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IOS_SDK_VERSION).sdk
+iphonesimulator-%/XMPPStringPrep.a: CFLAGS = $(BASE_CFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
+iphonesimulator-%/XMPPStringPrep.a: CXXFLAGS = $(BASE_CXXFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
+iphonesimulator-%/XMPPStringPrep.a: LDFLAGS = $(ARCHFLAGS) -miphoneos-version-min=$(IOS_MIN_VERSION)
+iphonesimulator-%/XMPPStringPrep.a: $(ICU_TARGET) XMPPStringPrep.m
 	rm -fr $(@D)
 	mkdir $(@D)
 	cd $(@D) && CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" xcrun --sdk $(SDK_NAME) sh $(PWD)/icu/source/runConfigureICU $(ICU_FLAGS)
 	cd $(@D) && gnumake
-	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o ICU4XMPPFramework.so ../ICU4XMPPFramework.m
-	cd $(@D) && libtool -static -o ICU4XMPPFramework.a ICU4XMPPFramework.so lib/*.a
+	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o XMPPStringPrep.so ../XMPPStringPrep.m
+	cd $(@D) && libtool -static -o XMPPStringPrep.a XMPPStringPrep.so lib/*.a
 
-iphoneos-%/ICU4XMPPFramework.a: ARCH = $(patsubst iphoneos-%/ICU4XMPPFramework.a, %, $@)
-iphoneos-%/ICU4XMPPFramework.a: ARCHFLAGS = -arch $(ARCH)
-iphoneos-%/ICU4XMPPFramework.a: SDK_NAME = iphoneos$(IOS_SDK_VERSION)
-iphoneos-%/ICU4XMPPFramework.a: SDK_ROOT = $(DEVELOPER)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IOS_SDK_VERSION).sdk
-iphoneos-%/ICU4XMPPFramework.a: CFLAGS = $(BASE_CFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
-iphoneos-%/ICU4XMPPFramework.a: CXXFLAGS = $(BASE_CXXFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
-iphoneos-%/ICU4XMPPFramework.a: LDFLAGS = $(ARCHFLAGS) -miphoneos-version-min=$(IOS_MIN_VERSION)
-iphoneos-%/ICU4XMPPFramework.a: $(ICU_TARGET) $(CROSS_BUILD_DIR)/ICU4XMPPFramework.a ICU4XMPPFramework.m
+iphoneos-%/XMPPStringPrep.a: ARCH = $(patsubst iphoneos-%/XMPPStringPrep.a, %, $@)
+iphoneos-%/XMPPStringPrep.a: ARCHFLAGS = -arch $(ARCH)
+iphoneos-%/XMPPStringPrep.a: SDK_NAME = iphoneos$(IOS_SDK_VERSION)
+iphoneos-%/XMPPStringPrep.a: SDK_ROOT = $(DEVELOPER)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IOS_SDK_VERSION).sdk
+iphoneos-%/XMPPStringPrep.a: CFLAGS = $(BASE_CFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
+iphoneos-%/XMPPStringPrep.a: CXXFLAGS = $(BASE_CXXFLAGS) $(ARCHFLAGS) -isysroot $(SDK_ROOT) -miphoneos-version-min=$(IOS_MIN_VERSION)
+iphoneos-%/XMPPStringPrep.a: LDFLAGS = $(ARCHFLAGS) -miphoneos-version-min=$(IOS_MIN_VERSION)
+iphoneos-%/XMPPStringPrep.a: $(ICU_TARGET) $(CROSS_BUILD_DIR)/XMPPStringPrep.a XMPPStringPrep.m
 	rm -fr $(@D)
 	mkdir $(@D)
 	cd $(@D) && CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" xcrun --sdk $(SDK_NAME) sh $(PWD)/icu/source/runConfigureICU $(ICU_FLAGS) --host=arm-apple-darwin --with-cross-build=$(PWD)/$(CROSS_BUILD_DIR)
 	cd $(@D) && gnumake
-	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o ICU4XMPPFramework.so ../ICU4XMPPFramework.m
-	cd $(@D) && libtool -static -o ICU4XMPPFramework.a ICU4XMPPFramework.so lib/*.a
+	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o XMPPStringPrep.so ../XMPPStringPrep.m
+	cd $(@D) && libtool -static -o XMPPStringPrep.a XMPPStringPrep.so lib/*.a
 
 clean:
 	rm -fr icu $(UNIVERSAL_TARGET) $(ARCH_DIRS)

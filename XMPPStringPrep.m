@@ -1,4 +1,4 @@
-#import "ICU4XMPPFramework.h"
+#import "XMPPStringPrep.h"
 
 #define U_HAVE_LIB_SUFFIX 1
 #define U_LIB_SUFFIX_C_NAME _xmppframework
@@ -11,40 +11,40 @@
 #define UCONFIG_NO_SERVICE 1
 #include <unicode/usprep.h>
 
-@interface ICU4XMPPFramework ()
+@interface XMPPStringPrep ()
 
-+(ICU4XMPPFramework*)sharedInstance;
++(XMPPStringPrep*)sharedInstance;
 -(NSString*)privatePrepNode:(NSString *)node;
 -(NSString*)privatePrepDomain:(NSString *)domain;
 -(NSString*)privatePrepResource:(NSString *)resource;
 
 @end
 
-@implementation ICU4XMPPFramework {
+@implementation XMPPStringPrep {
   UStringPrepProfile *_nodeProfile;
   UStringPrepProfile *_nameProfile;
   UStringPrepProfile *_resourceProfile;
 }
 
-+(ICU4XMPPFramework*)sharedInstance {
-  static ICU4XMPPFramework *instance;
++(XMPPStringPrep*)sharedInstance {
+  static XMPPStringPrep *instance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    instance = [[ICU4XMPPFramework alloc] init];
+    instance = [[XMPPStringPrep alloc] init];
   });
   return instance;
 }
 
 +(NSString *)prepNode:(NSString *)node {
-  return [[ICU4XMPPFramework sharedInstance] privatePrepNode:node];
+  return [[XMPPStringPrep sharedInstance] privatePrepNode:node];
 }
 
 +(NSString *)prepDomain:(NSString *)domain {
-  return [[ICU4XMPPFramework sharedInstance] privatePrepDomain:domain];
+  return [[XMPPStringPrep sharedInstance] privatePrepDomain:domain];
 }
 
 +(NSString *)prepResource:(NSString *)resource {
-  return [[ICU4XMPPFramework sharedInstance] privatePrepResource:resource];
+  return [[XMPPStringPrep sharedInstance] privatePrepResource:resource];
 }
 
 -(id)init {
