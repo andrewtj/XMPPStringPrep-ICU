@@ -1,0 +1,6 @@
+*.tgz
+*.zip
+XMPPStringPrep.a
+icu/
+iphone*-*/
+macosx-*/
