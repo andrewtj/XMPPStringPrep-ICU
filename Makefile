@@ -1,13 +1,13 @@
 .PHONY: all clean
-SRC_ARCHIVE = icu4c-51_2-src.tgz
-# Sourced from http://site.icu-project.org/download/51#TOC-ICU4C-Download
-DATA_ARCHIVE = icudt51l.zip
+SRC_ARCHIVE = icu4c-52_1-src.tgz
+# Sourced from http://site.icu-project.org/download/52#TOC-ICU4C-Download
+DATA_ARCHIVE = icudt52l.zip
 # Sourced from: http://apps.icu-project.org/datacustom/
 # Only contains Miscellaneous Data: rfc3491.spp rfc3920node.spp rfc3920res.spp
 DEVELOPER = $(shell xcode-select --print-path)
 MACOSX_SDK_VERSION = 10.8
 MACOSX_MIN_VERSION = 10.7
-IOS_SDK_VERSION = 6.1
+IOS_SDK_VERSION = 7.0
 IOS_MIN_VERSION = $(IOS_SDK_VERSION)
 ICU_FLAGS = MacOSX --enable-static --disable-shared --enable-renaming --enable-extras=no --enable-icuio=no --enable-layout=no --enable-tests=no --enable-samples=no --with-library-suffix=xmppframework
 BASE_CFLAGS = -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0 -DUCONFIG_NO_FILE_IO=1 -DUCONFIG_NO_LEGACY_CONVERSION=1 -DUCONFIG_NO_BREAK_ITERATION=1 -DUCONFIG_NO_FORMATTING=1 -DUCONFIG_NO_REGULAR_EXPRESSIONS=1 -DUCONFIG_NO_SERVICE=1 -I$(PWD)/icu/source/common -I$(PWD)/icu/source/tools/tzcode
@@ -15,7 +15,7 @@ BASE_CXXFLAGS = -DU_CHARSET_IS_UTF8=1 -DU_USING_ICU_NAMESPACE=0 -DUCONFIG_NO_FIL
 OUTPUT = lib/libicudataxmppframework.a lib/libicui18nxmppframework.a lib/libicuioxmppframework.a lib/libiculexmppframework.a lib/libiculxxmppframework.a lib/libicutuxmppframework.a lib/libicuucxmppframework.a
 CROSS_BUILD_DIR = macosx-x86_64
 ICU_TARGET = icu/source/runConfigureICU
-ARCH_DIRS = macosx-x86_64 iphonesimulator-i386 iphoneos-armv7s iphoneos-armv7
+ARCH_DIRS = macosx-x86_64 iphonesimulator-i386 iphoneos-armv7s iphoneos-armv7 iphoneos-arm64
 ARCH_TARGET = $(patsubst %, %/XMPPStringPrep.a, $(ARCH_DIRS))
 UNIVERSAL_TARGET = XMPPStringPrep.a
 
@@ -71,7 +71,7 @@ iphoneos-%/XMPPStringPrep.a: LDFLAGS = $(ARCHFLAGS) -miphoneos-version-min=$(IOS
 iphoneos-%/XMPPStringPrep.a: $(ICU_TARGET) $(CROSS_BUILD_DIR)/XMPPStringPrep.a XMPPStringPrep.m
 	rm -fr $(@D)
 	mkdir $(@D)
-	cd $(@D) && CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" xcrun --sdk $(SDK_NAME) sh $(PWD)/icu/source/runConfigureICU $(ICU_FLAGS) --host=arm-apple-darwin --with-cross-build=$(PWD)/$(CROSS_BUILD_DIR)
+	cd $(@D) && CC="cc $(ARCHFLAGS)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(LDFLAGS)" xcrun --sdk $(SDK_NAME) sh $(PWD)/icu/source/runConfigureICU $(ICU_FLAGS) --host=arm-apple-darwin --with-cross-build=$(PWD)/$(CROSS_BUILD_DIR)
 	cd $(@D) && gnumake
 	cd $(@D) && xcrun -sdk $(SDK_NAME) clang $(CFLAGS) -x objective-c -fobjc-arc -I../icu/source/common -c -o XMPPStringPrep.so ../XMPPStringPrep.m
 	cd $(@D) && libtool -static -o XMPPStringPrep.a XMPPStringPrep.so lib/*.a
